@@ -438,7 +438,7 @@ class Location:
     # path may contain any chars. to avoid ambiguities with other regexes,
     # it must not start with "//" nor with "scheme://" nor with "rclone:".
     local_path_re = r"""
-        (?!(//|(ssh|socket|sftp|file)://|rclone:))
+        (?!(//|(ssh|socket|sftp|file)://|rclone:|s3:))
         (?P<path>.+)
     """
 
@@ -460,6 +460,8 @@ class Location:
     )
 
     rclone_re = re.compile(r"(?P<proto>rclone):(?P<path>(.*))", re.VERBOSE)
+    
+    s3_re = re.compile(r"(?P<proto>s3):(?P<path>(.*))", re.VERBOSE)
 
     file_or_socket_re = re.compile(r"(?P<proto>(file|socket))://" + abs_path_re, re.VERBOSE)
 
@@ -506,6 +508,11 @@ class Location:
             self.proto = m.group("proto")
             self.path = m.group("path")
             return True
+        m = self.s3_re.match(text)
+        if m:
+            self.proto = m.group("proto")
+            self.path = m.group("path")
+            return True
         m = self.file_or_socket_re.match(text)
         if m:
             self.proto = m.group("proto")
@@ -530,7 +537,7 @@ class Location:
 
     def to_key_filename(self):
         name = re.sub(r"[^\w]", "_", self.path.rstrip("/"))
-        if self.proto not in ("file", "socket", "rclone"):
+        if self.proto not in ("file", "socket", "rclone", "s3"):
             name = re.sub(r"[^\w]", "_", self.host) + "__" + name
         if len(name) > 100:
             # Limit file names to some reasonable length. Most file systems
@@ -552,6 +559,8 @@ class Location:
         if self.proto in ("file", "socket"):
             return self.path
         if self.proto == "rclone":
+            return f"{self.proto}:{self.path}"
+        if self.proto == "s3":
             return f"{self.proto}:{self.path}"
         if self.proto in ("sftp", "ssh"):
             return (
