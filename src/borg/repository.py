@@ -499,6 +499,7 @@ class Repository:
 
     def preload(self, ids):
         """Preload objects (only applies to remote repositories)"""
+        self.store.preload(ids)
 
     def break_lock(self):
         Lock(self.store).break_lock()
