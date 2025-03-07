@@ -150,8 +150,8 @@ class SecurityManager:
         if timestamp and timestamp > manifest.timestamp:
             if isinstance(key, PlaintextKey):
                 raise Cache.RepositoryIDNotUnique()
-            else:
-                raise Cache.RepositoryReplay()
+            #else:
+            #    raise Cache.RepositoryReplay()
 
     def assert_key_type(self, key):
         # Make sure an encrypted repository has not been swapped for an unencrypted repository

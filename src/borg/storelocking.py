@@ -138,16 +138,19 @@ class Lock:
         except ObjectNotFound:
             return {}
         for info in infos:
-            key = info.name
-            content = self.store.load(f"locks/{key}")
-            lock = json.loads(content.decode("utf-8"))
-            lock["key"] = key
-            lock["dt"] = datetime.datetime.fromisoformat(lock["time"])
-            if self._is_stale_lock(lock):
-                # ignore it and delete it (even if it is not from us)
-                self._delete_lock(key, ignore_not_found=True, update_last_refresh=self._is_our_lock(lock))
-            else:
-                locks[key] = lock
+            try:
+                key = info.name
+                content = self.store.load(f"locks/{key}")
+                lock = json.loads(content.decode("utf-8"))
+                lock["key"] = key
+                lock["dt"] = datetime.datetime.fromisoformat(lock["time"])
+                if self._is_stale_lock(lock):
+                    # ignore it and delete it (even if it is not from us)
+                    self._delete_lock(key, ignore_not_found=True, update_last_refresh=self._is_our_lock(lock))
+                else:
+                    locks[key] = lock
+            except:
+                pass
         return locks
 
     def _find_locks(self, *, only_exclusive=False, only_mine=False):
