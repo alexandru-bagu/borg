@@ -257,9 +257,12 @@ class Repository:
         if self.store_opened:
             self.store.close()
             self.store_opened = False
+        self.refresh_stats()
+        self.opened = False
+
+    def refresh_stats(self):
         self.tx_bytes = self.store.stats.get('store_volume')
         self.rx_bytes = self.store.stats.get('load_volume')
-        self.opened = False
 
     def info(self):
         """return some infos about the repo (must be opened first)"""
