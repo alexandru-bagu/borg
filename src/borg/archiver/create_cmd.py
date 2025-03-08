@@ -192,7 +192,7 @@ class CreateMixIn:
             if not dry_run:
                 archive.stats += fso.stats
                 refresh_stats = getattr(repository, "refresh_stats", None)
-                if callable(refresh_stats): refresh_stats(repository)
+                if callable(refresh_stats): refresh_stats()
                 archive.stats.rx_bytes = getattr(repository, "rx_bytes", 0)
                 archive.stats.tx_bytes = getattr(repository, "tx_bytes", 0)
                 if args.progress:
