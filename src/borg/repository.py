@@ -151,6 +151,8 @@ class Repository:
         self.do_lock = lock
         self.lock_wait = lock_wait
         self.exclusive = exclusive
+        self.rx_bytes = 0
+        self.tx_bytes = 0
 
     def __repr__(self):
         return f"<{self.__class__.__name__} {self._location}>"
@@ -255,6 +257,8 @@ class Repository:
         if self.store_opened:
             self.store.close()
             self.store_opened = False
+        self.tx_bytes = self.store.stats.get('store_volume')
+        self.rx_bytes = self.store.stats.get('load_volume')
         self.opened = False
 
     def info(self):
