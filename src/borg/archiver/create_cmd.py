@@ -190,11 +190,11 @@ class CreateMixIn:
                         self.print_warning_instance(BackupWarning(path, e))
                         continue
             if not dry_run:
-                if args.progress:
-                    archive.stats.show_progress(final=True)
                 archive.stats += fso.stats
                 archive.stats.rx_bytes = getattr(repository, "rx_bytes", 0)
                 archive.stats.tx_bytes = getattr(repository, "tx_bytes", 0)
+                if args.progress:
+                    archive.stats.show_progress(final=True)
                 if sig_int:
                     # do not save the archive if the user ctrl-c-ed.
                     raise Error("Got Ctrl-C / SIGINT.")

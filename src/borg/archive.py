@@ -120,7 +120,7 @@ Bytes sent to remote: {stats.tx_bytes}
         )
 
     def as_dict(self):
-        return {
+        data = {
             "original_size": FileSize(self.osize, iec=self.iec),
             "deduplicated_size": FileSize(self.usize, iec=self.iec),
             "nfiles": self.nfiles,
@@ -128,6 +128,12 @@ Bytes sent to remote: {stats.tx_bytes}
             "chunking_time": self.chunking_time,
             "files_stats": self.files_stats,
         }
+        if self.rx_bytes > 0 or self.tx_bytes > 0:
+            data.update({
+                "rx_bytes": self.rx_bytes,
+                "tx_bytes": self.tx_bytes,
+            })
+        return data
 
     def as_raw_dict(self):
         return {"size": self.osize, "nfiles": self.nfiles}
