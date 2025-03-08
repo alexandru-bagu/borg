@@ -163,7 +163,7 @@ Bytes sent to remote: {stats.tx_bytes}
                     if item:
                         data.update(text_to_json("path", item.path))
                 else:
-                    data = {}
+                    data = self.as_dict()
                 data.update({"time": time.time(), "type": "archive_progress", "finished": final})
                 msg = json.dumps(data)
                 end = "\n"
