@@ -101,8 +101,8 @@ Unchanged files: {unchanged_files}
 Modified files: {modified_files}
 Error files: {error_files}
 Files changed while reading: {files_changed_while_reading}
-Bytes read from remote: {stats.rx_bytes}
-Bytes sent to remote: {stats.tx_bytes}
+Bytes read from remote: {stats.rx_bytes_fmt}
+Bytes sent to remote: {stats.tx_bytes_fmt}
 """.format(
             stats=self,
             hashing_time=hashing_time,
@@ -152,6 +152,14 @@ Bytes sent to remote: {stats.tx_bytes}
     @property
     def usize_fmt(self):
         return format_file_size(self.usize, iec=self.iec)
+
+    @property
+    def tx_bytes_fmt(self):
+        return format_file_size(self.tx_bytes, iec=self.iec)
+
+    @property
+    def rx_bytes_fmt(self):
+        return format_file_size(self.rx_bytes, iec=self.iec)
 
     def show_progress(self, item=None, final=False, stream=None, dt=None):
         now = time.monotonic()
