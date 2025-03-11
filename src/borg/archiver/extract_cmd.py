@@ -119,6 +119,8 @@ class ExtractMixIn:
         if pi:
             # clear progress output
             pi.finish()
+        pi.output("forced exit")
+        sys.exit(0)
 
     def build_parser_extract(self, subparsers, common_parser, mid_common_parser):
         from ._common import process_epilog
